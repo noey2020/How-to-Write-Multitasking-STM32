@@ -27,7 +27,24 @@ round-robin scheduler that we mentioned earlier. We might have to hurdle supervi
 because they depart from the usual context switching which is written in microcode. I 
 guess we bypass those by privileged instructions to accomplish multitasking.
 
-But here's the pseudo multitasking to start with.
+The easy way is to use CMSIS-RTOS where we discuss threads:
+
+#include <cmsis_os.h>
+
+void main(void){
+
+    osKernelInitialize();
+    
+    ...
+    
+    Init_Thread();
+    
+    osKernelStart();
+    
+}
+
+We will do another tutorial for CMSIS-RTOS separately. But for the brute "from scratch way"
+force, here's the pseudo multitasking C code to start with.
 
 int counter_main  = 0;
 
