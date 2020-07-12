@@ -140,16 +140,22 @@ Constructing our multitasking "C" program that allocates these slices of run-tim
 thread in a round-robin way, we achieve the illusion that all threads run in parallel.
 In short, multitasking.
 
-Threads makes us more object oriented as opposed to procedural. 
+Threads makes us more object oriented as opposed to procedural. Let's set this aside for
+the moment and switch back to multitasking.
 
-So how do we switch from one task to another? Hardware provides us with interrupts, NVIC,
-timers and software provides us stack and data structures. We illustrated before how we
-enter and exit interrupts and we will use that strategy which means we have to augment
-it by writing the context switch between tasks. Before switching, we need to store the 
-current stack pointer and the registers pushing them into the stack. In addition to what
-the hardware push, we also have to push by software needed for the context switch.
-Because of software, "we can skin a cat in many ways". We can use a dual stack and/or a
-single stack. The proposed is:
+Okay, let's try to detail how do we switch from one task to another? Hardware provides us
+with interrupts, NVIC, timers and software provides us stack and data structures. We make
+it happen organizing our thoughts about stack frame data structure and use a dedicated 
+CPU hardware(SysTick) timer to provide the RTOS time reference. We illustrated before how
+we enter and exit interrupts and we will use that strategy which means we have to augment
+it by writing the context switch between tasks. In addition, each time we switch running
+tasks , we have to save the state of all the task variables and in the registers to a 
+stack frame . Also, all the run-time information about the task in a task control block, 
+which is managed by our RTOS kernel. In other words, hardware has to push and software 
+has push the registers. And this is what we call "context switching". Another word for it
+is the time to save the current task state and load up and start the next task. The next 
+detail is how do we design the data structures because in software, "we can skin a cat in
+many ways". We can use a dual stack and/or a single stack. The proposed is:
 
 typedef struct{
 
