@@ -108,7 +108,7 @@ periodic interrupts as time base and create those time slices servicing threads.
 
 Illustration of "C" functions versus RTOS threads:
 
-unsigned int my_task(void)
+unsigned int my_task(void){
 
     int i;
     
