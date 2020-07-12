@@ -96,6 +96,52 @@ void my_task_2(void *data){
     
 }
 
+Remember that the building blocks of a typical "C" program are functions which we call to
+perform a specific procedure  and which we then return to the calling function. In
+contrast, the building block of Multitasking (or renamed RTOS) is a "thread" which is 
+very similar to a "C" function but has some very fundamental differences, one of which,
+is threads contain a while(1) infinite loop inside. Having threads with infinite loops
+allows us to do continuing procedures within itself. Having a scheduler manage several
+threads and give them the "threads" precious time slices means we should have a mechanism
+to context switch between threads. Schedulers make good use of System timers to generate
+periodic interrupts as time base and create those time slices servicing threads.
+
+Illustration of "C" functions versus RTOS threads:
+
+unsigned int my_task(void)
+
+    int i;
+    
+    char ch;
+    
+    ...
+    
+    ...
+    
+    return (myUnsignedInt);
+    
+}
+
+void my_task_1(void *data){
+
+    int i;
+    
+    while(1){
+    
+        counter_task1++;
+        
+        for(i = 0; i < 1000; i++);
+        
+    }
+    
+}
+
+Constructing our multitasking "C" program that allocates these slices of run-time to each
+thread in a round-robin way, we achieve the illusion that all threads run in parallel.
+In short, multitasking.
+
+Threads makes us more object oriented as opposed to procedural. 
+
 So how do we switch from one task to another? Hardware provides us with interrupts, NVIC,
 timers and software provides us stack and data structures. We illustrated before how we
 enter and exit interrupts and we will use that strategy which means we have to augment
