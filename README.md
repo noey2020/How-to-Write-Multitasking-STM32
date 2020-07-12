@@ -96,6 +96,38 @@ void my_task_2(void *data){
     
 }
 
+So how do we switch from one task to another? Hardware provides us with interrupts, NVIC,
+timers and software provides us stack and data structures. We illustrated before how we
+enter and exit interrupts and we will use that strategy which means we have to augment
+it by writing the context switch between tasks. Before switching, we need to store the 
+current stack pointer and the registers pushing them into the stack. In addition to what
+the hardware push, we also have to push by software needed for the context switch.
+Because of software, "we can skin a cat in many ways". We can use a dual stack and/or a
+single stack. The proposed is:
+
+typedef struct{
+
+    // pushed by software
+    
+    uint32_t r4;
+    
+    uint32_t r3;
+    
+    ...
+    
+    ...
+    
+    // pushed by hardware
+    
+    uint32_t ro;
+    
+    uint32_t r1;
+    
+    ...
+    
+    ...
+    
+} stack_frame_t;
 
 I included some posts for reference.
 
