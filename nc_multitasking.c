@@ -114,17 +114,24 @@ __asm void SysTick_Handler(void){
 	
 	  CPSID  I     ; SET PRIMASK to disable IRQ
 	
-	  TST    lr, #0x04
-	  MRSEQ  r0, msp
-	  MRSNE  r0, psp
+	  TST    lr, #0x04       ; LR = 0xFFFFFFF9 -> MSP; LR = 0xFFFFFFFD -> PSP
+	  MRSEQ  r0, msp         ; Get MSP if LR = 0xFFFFFFF9
+	  MRSNE  r0, psp         ; Get PSP if LR = 0xFFFFFFFD
+	  STMDB  r0!, {r4-r11}   ; Save partial context (r4-r11) onto stack
+		MSREQ  msp, r0         ; Update MSP if LR = 0xFFFFFFF9
+		MSRNE  psp, r0         ; Update PSP if LR = 0xFFFFFFFD
 
 	  BL     update_sp
-	  BL     get_next_task   ;
+	  BL     get_next_task   ; r0 = 0xFFFFFFF9 or 0xFFFFFFFD
+		MOV    lr, r0          ; Set the link register
 	
-	  ; load context of new task_table
-	  TST    lr, #0x04
-	  MRSEQ  r0, msp
-	  MRSNE  r0, psp
+	  ; load context of new task
+	  TST    lr, #0x04       ; LR = 0xFFFFFFF9 -> MSP; LR = 0xFFFFFFFD -> PSP
+	  MRSEQ  r0, msp         ; Get MSP if LR = 0xFFFFFFF9
+	  MRSNE  r0, psp         ; Get PSP if LR = 0xFFFFFFFD
+	  STMDB  r0!, {r4-r11}   ; Save partial context (r4-r11) onto stack
+		MSREQ  msp, r0         ; Update MSP if LR = 0xFFFFFFF9
+		MSRNE  psp, r0         ; Update PSP if LR = 0xFFFFFFFD
 	
 	  CPSIE  I     ; Clear PRIMASK to enable IRQ
 	  BX     lr    ; Trigger unstacking (r0-r3, r12, LR, PSR, PC)
