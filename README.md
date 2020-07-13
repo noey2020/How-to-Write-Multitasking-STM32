@@ -46,6 +46,16 @@ void main(void){
 We will do another tutorial for CMSIS-RTOS separately. But for the brute "from scratch way"
 force, here's the pseudo multitasking C code to start with.
 
+#include "stm32l1xx.h"
+
+#include "nc_multitasking.h"
+
+void my_task_1(void *data);
+
+void my_task_2(void *data);
+
+//extern uint32_t w;              /* main.c(3): error: unknown type name 'uint32_t'. #include "stm32l1xx.h" and declare extern or unsigned long int. */
+
 int counter_main  = 0;
 
 int counter_task1 = 0;
